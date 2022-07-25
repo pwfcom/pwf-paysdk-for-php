@@ -36,7 +36,6 @@ class RSAEncryptor
         if (strpos($publicKey,'-----BEGIN PUBLIC KEY-----') === false){
             $publicKey = "-----BEGIN PUBLIC KEY-----\n".wordwrap($publicKey, 64, "\n", true) ."\n-----END PUBLIC KEY-----";
         }
-
         return openssl_pkey_get_public($publicKey);
     }
 
@@ -89,7 +88,7 @@ class RSAEncryptor
     public function privDecrypt($data, $rsaPrivateKey) {
         $encryptstr = base64_decode($data);
         
-        
+
         $decrypted = "";
         $dataArray = str_split($encryptstr, self::MAX_DECRYPT_BLOCK_SIZE);
 

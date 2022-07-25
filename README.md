@@ -29,11 +29,12 @@ use Pwf\PaySDK\Base\ApiClient;
 use Pwf\PaySDK\Base\Config;
     
     
-
-$apiClient = ApiClient::setOptions(getOptions());
+//加载配置文件
+ApiClient::setOptions(getOptions());
 
 try {
 
+	//支付請求接口
     $params = [
         "trade_name" => "trade_name",
         "pay_type" => 1,
@@ -42,14 +43,20 @@ try {
         "out_trade_no" => "20200326235526001",
         "subject" => "eur_pay",
         "timestamp" => 1657895835,
-        "return_url" => "https://www.return.com/return",
-        "collection_model" => 1
+		"notify_url"=> "https://www.notify.com/notify",
+		"return_url" => "https://www.return.com/return",
+        "collection_model" => 1,
+        "merchant_no" => "2022072091622963",
     ];
 
-    $result = $apiClient->walletPayAddress($params);
-
+    $result = ApiClient::wallet()->payAddress($params);
     print_r($result);
-
+    
+    
+    //异步回调通知
+    $json_string = '{"ret":1000,"msg":"\u8bf7\u6c42\u6210\u529f","data":"WDlwdnBoSkFDeS96bVdIYjg4WUNaaXVuV3NTQ......."}';
+    $result = ApiClient::notify()->pay($json_string);
+	print_r($result);
 
 } catch (Exception $e) {
     echo "调用失败，". $e->getMessage(). PHP_EOL;;

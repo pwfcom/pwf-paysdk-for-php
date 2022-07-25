@@ -2,15 +2,22 @@
 namespace Pwf\PaySDK\Base;
 
 use Pwf\PaySDK\Api\Wallet;
+use Pwf\PaySDK\Api\Notify;
 
 class ApiClient{
 
 	private static $instance;
     private $kernel;
+    
+    protected static $wallet;
+    protected static $notify;
 
     private function __construct($config)
     {
         $this->kernel = new Kernel($config);
+        
+        self::$wallet = new Wallet($this->kernel);
+        self::$notify = new Notify($this->kernel);
     }
 
     public static function setOptions($config)
@@ -21,10 +28,12 @@ class ApiClient{
         return self::$instance;
     }
 
-	public function walletPayAddress($params){
-
-		$wallet = new Wallet($this->kernel);
-		return $wallet->payAddress($params);
-	}
-
+    public static function wallet()
+    {
+        return self::$wallet;
+    }
+    
+    public static function notify(){
+        return self::$notify;
+    }
 }

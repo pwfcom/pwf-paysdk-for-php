@@ -44,8 +44,8 @@ class Kernel{
 
         ksort($params);
 
-    	$encrypted = $this->rsaEncrypt(json_encode($params));
-        
+    	$encrypted = $this->rsaEncrypt(json_encode($params,JSON_UNESCAPED_SLASHES));
+
     	$post_params = [
     	    "data" => $encrypted,
     	    'sign' => $this->sign($encrypted,$this->merchantPrivateKey),
@@ -55,7 +55,7 @@ class Kernel{
     	];
 
     	return $this->buildQueryString($post_params);
-
+        //return json_encode($post_params,JSON_UNESCAPED_SLASHES);
     }
 
     public function sign($content, $privateKey)
@@ -72,10 +72,42 @@ class Kernel{
     }
 
     public function rsaEncrypt($data){
-        return $this->RSAEncryptor->pubEncrypt($data,$this->pwfPublicKey,self::DEFAULT_CHARSET);
+        return $this->RSAEncryptor->pubEncrypt($data,$this->pwfPublicKey);
+    }
+    
+    public function rsaDecrypt($data){
+        return $this->RSAEncryptor->privDecrypt($data,$this->merchantPrivateKey);
     }
 
+    public function getResponseData($data,$returnClass){
+        $result = new ApiResponse($data);
+        if($result->isSuccess()){
+            $data = $this->decryptResponseData($result->data());
+            if($this->verify($data)){
+                return $returnClass::fromMap($data);
+            }
+            
+            throw new PwfError("验签失败，请检查Pwf平台公钥或商户私钥是否配置正确。");
+            
+        }else if($result->ret()){
+            throw new PwfError($result->msg());
+        }else{
+            throw new PwfError("返回数据出错");
+        }
+    }
+    
+    public function decryptResponseData($data){
 
+        $decrypt_data = $this->rsaDecrypt(base64_decode($data));
+        
+        $data_arr = json_decode($decrypt_data,true);
+        if(json_last_error() === JSON_ERROR_NONE){
+            return $data_arr;
+        }else{
+            return null;
+        }
+    }
+    
     private function getSignContent($params)
     {
         unset($params['sign']);
@@ -99,19 +131,15 @@ class Kernel{
         return $stringToBeSigned;
     }
 
-
-    public function verify($response)
+    public function verify($data_arr)
     {
-        $data = $response->data;
-  
-        if(!empty($data)){
-            $content = $this->getSignContent($data);
-            $sign = $data['sign'] ?? null;
-            return $this->RSAEncryptor->verify($content, $sign, $this->pwfPublicKey);
+        if(!is_array($data_arr)){
+           return false; 
         }
         
-        return false;
-        
+        $content = $this->getSignContent($data_arr);
+        $sign = $data_arr['sign'] ?? null;
+        return $this->RSAEncryptor->verify($content, $sign, $this->pwfPublicKey);
     }
 
     private function buildQueryString(array $params)
