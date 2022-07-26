@@ -2,7 +2,7 @@
 
 namespace Pwf\PaySDK\Api\Response;
 
-class RechageNotifyResponse{
+class NotifyRechargeResponse{
 
     /**
      * @var string
@@ -55,7 +55,7 @@ class RechageNotifyResponse{
     public $status_desc;
 
     public static function fromMap($map = []) {
-        $model = new self();
+        $model = new NotifyRechargeResponse();
         if(isset($map['order_num'])){
             $model->order_num = $map['order_num'];
         }

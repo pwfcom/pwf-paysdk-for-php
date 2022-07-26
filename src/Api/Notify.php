@@ -1,8 +1,8 @@
 <?php
 namespace Pwf\PaySDK\Api;
 
-use Pwf\PaySDK\Api\Response\PayNotifyResponse;
-use Pwf\PaySDK\Api\Response\RechageNotifyResponse;
+use Pwf\PaySDK\Api\Response\NotifyPayResponse;
+use Pwf\PaySDK\Api\Response\NotifyRechargeResponse;
 
 class Notify{
 
@@ -13,10 +13,10 @@ class Notify{
     }
 
     public function pay($jsonString){
-        return $this->_kernel->getResponseData($jsonString, PayNotifyResponse::class);
+        return $this->_kernel->getResponseData($jsonString, NotifyPayResponse::class);
     }
     
     public function recharge($jsonString){
-        return $this->_kernel->getResponseData($jsonString, RechageNotifyResponse::class);
+        return $this->_kernel->getResponseData($jsonString, NotifyRechargeResponse::class);
     }
 }
