@@ -39,7 +39,7 @@ try {
         "trade_name" => "trade_name",
         "pay_type" => 1,
         "fiat_currency" => "EUR",
-        "fiat_account" => 0.01,
+        "fiat_amount" => 0.01,
         "out_trade_no" => "20200326235526001",
         "subject" => "eur_pay",
         "timestamp" => 1657895835,
