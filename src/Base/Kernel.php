@@ -30,7 +30,7 @@ class Kernel{
 
     public function getConfig($key)
     {
-        return $this->config->$key;
+        return isset($this->config->$key) ? $this->config->$key : null;
     }
 
 
