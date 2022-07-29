@@ -111,46 +111,26 @@ class Kernel{
     private function getSignContent($params)
     {
         unset($params['sign']);
-        $stringToBeSigned = "";
+        ksort($params);
 	    
-//         ksort($params);
-//         $i = 0;
-//         foreach ($params as $k => $v) {
-//             if (false === $this->checkEmpty($v) && "@" != substr($v, 0, 1)) {
-//                 // 轉換成目標字符集
-//                 $v = $this->characet($v, self::DEFAULT_CHARSET);
-//                 if ($i == 0) {
-//                     $stringToBeSigned .= "$k" . "=" . "$v";
-//                 } else {
-//                     $stringToBeSigned .= "&" . "$k" . "=" . "$v";
-//                 }
-//                 $i++;
-//             }
-//         }
-//         unset ($k, $v);
+	$stringToBeSigned = "";
+        $i = 0;
+        foreach ($params as $k => $v) {
+            if (false === $this->checkEmpty($v) && "@" != substr($v, 0, 1)) {
+                // 轉換成目標字符集
+                $v = $this->characet($v, self::DEFAULT_CHARSET);
+                if ($i == 0) {
+                    $stringToBeSigned .= "$k" . "=" . "$v";
+                } else {
+                    $stringToBeSigned .= "&" . "$k" . "=" . "$v";
+                }
+                $i++;
+            }
+        }
+        unset ($k, $v);
 	    
-	// 對數組遞歸ksort，然後json_encode
-        $arr = $this->mulArrksort($params);
-        $stringToBeSigned = json_encode($arr, JSON_UNESCAPED_SLASHES);
-
         return $stringToBeSigned;
     }
-
-	// 對多維數組遞歸ksort
-	private function mulArrksort($arr)
-	{
-		if (is_array($arr)) {
-			ksort($arr);
-			foreach ($arr as &$val) {
-			    if (is_array($val)) {
-				ksort($arr);
-				$val = $this->mulArrksort($val);
-			    }
-			}
-		}
-
-		return $arr;
-	}
 	
 	
     public function verify($data_arr)
