@@ -34,17 +34,16 @@ ApiClient::setOptions(getOptions());
 
 try {
 
-	//支付請求接口
+     //支付請求接口
     $params = [
         "trade_name" => "trade_name",
-        "pay_type" => 1,
         "fiat_currency" => "EUR",
         "fiat_amount" => 0.01,
         "out_trade_no" => "20200326235526001",
         "subject" => "eur_pay",
         "timestamp" => 1657895835,
-		"notify_url"=> "https://www.notify.com/notify",
-		"return_url" => "https://www.return.com/return",
+	"notify_url"=> "https://www.notify.com/notify",
+	"return_url" => "https://www.return.com/return",
         "collection_model" => 1,
         "merchant_no" => "2022072091622963",
     ];
@@ -56,7 +55,7 @@ try {
     //异步回调通知
     $json_string = '{"ret":1000,"msg":"\u8bf7\u6c42\u6210\u529f","data":"WDlwdnBoSkFDeS96bVdIYjg4WUNaaXVuV3NTQ......."}';
     $result = ApiClient::notify()->pay($json_string);
-	print_r($result);
+    print_r($result);
 
 } catch (Exception $e) {
     echo "调用失败，". $e->getMessage(). PHP_EOL;;
