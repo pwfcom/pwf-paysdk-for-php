@@ -98,7 +98,7 @@ class Kernel{
     
     public function decryptResponseData($data){
 
-        $decrypt_data = $this->rsaDecrypt(base64_decode($data));
+        $decrypt_data = $this->rsaDecrypt($data);
         
         $data_arr = json_decode($decrypt_data,true);
         if(json_last_error() === JSON_ERROR_NONE){
