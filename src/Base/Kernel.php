@@ -111,26 +111,50 @@ class Kernel{
     private function getSignContent($params)
     {
         unset($params['sign']);
-
-        ksort($params);
         $stringToBeSigned = "";
-        $i = 0;
-        foreach ($params as $k => $v) {
-            if (false === $this->checkEmpty($v) && "@" != substr($v, 0, 1)) {
-                // 转换成目标字符集
-                $v = $this->characet($v, self::DEFAULT_CHARSET);
-                if ($i == 0) {
-                    $stringToBeSigned .= "$k" . "=" . "$v";
-                } else {
-                    $stringToBeSigned .= "&" . "$k" . "=" . "$v";
-                }
-                $i++;
-            }
-        }
-        unset ($k, $v);
+	    
+//         ksort($params);
+//         $i = 0;
+//         foreach ($params as $k => $v) {
+//             if (false === $this->checkEmpty($v) && "@" != substr($v, 0, 1)) {
+//                 // 转换成目标字符集
+//                 $v = $this->characet($v, self::DEFAULT_CHARSET);
+//                 if ($i == 0) {
+//                     $stringToBeSigned .= "$k" . "=" . "$v";
+//                 } else {
+//                     $stringToBeSigned .= "&" . "$k" . "=" . "$v";
+//                 }
+//                 $i++;
+//             }
+//         }
+//         unset ($k, $v);
+	    
+	// 对数组递归ksort，然后json_encode
+        $arr = $this->mulArrksort($params);
+        $stringToBeSigned = json_encode($arr, JSON_UNESCAPED_SLASHES);
+
         return $stringToBeSigned;
     }
 
+	
+
+	// 对多维数组递归ksort
+	private function mulArrksort($arr)
+	{
+		if (is_array($arr)) {
+			ksort($arr);
+			foreach ($arr as &$val) {
+			    if (is_array($val)) {
+				ksort($arr);
+				$val = $this->mulArrksort($val);
+			    }
+			}
+		}
+
+		return $arr;
+	}
+	
+	
     public function verify($data_arr)
     {
         if(!is_array($data_arr)){
