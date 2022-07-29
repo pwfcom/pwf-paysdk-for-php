@@ -87,12 +87,12 @@ class Kernel{
                 return $returnClass::fromMap($data);
             }
             
-            throw new PwfError("验签失败，请检查Pwf平台公钥或商户私钥是否配置正确。");
+            throw new PwfError("驗簽失敗，請檢查Pwf平台公鑰或商戶私鑰是否配置正確。");
             
         }else if($result->ret()){
             throw new PwfError($result->msg());
         }else{
-            throw new PwfError("返回数据出错");
+            throw new PwfError("返回數據出錯");
         }
     }
     
@@ -117,7 +117,7 @@ class Kernel{
 //         $i = 0;
 //         foreach ($params as $k => $v) {
 //             if (false === $this->checkEmpty($v) && "@" != substr($v, 0, 1)) {
-//                 // 转换成目标字符集
+//                 // 轉換成目標字符集
 //                 $v = $this->characet($v, self::DEFAULT_CHARSET);
 //                 if ($i == 0) {
 //                     $stringToBeSigned .= "$k" . "=" . "$v";
@@ -129,16 +129,14 @@ class Kernel{
 //         }
 //         unset ($k, $v);
 	    
-	// 对数组递归ksort，然后json_encode
+	// 對數組遞歸ksort，然後json_encode
         $arr = $this->mulArrksort($params);
         $stringToBeSigned = json_encode($arr, JSON_UNESCAPED_SLASHES);
 
         return $stringToBeSigned;
     }
 
-	
-
-	// 对多维数组递归ksort
+	// 對多維數組遞歸ksort
 	private function mulArrksort($arr)
 	{
 		if (is_array($arr)) {
