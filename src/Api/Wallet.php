@@ -17,7 +17,7 @@ class Wallet{
         $this->_kernel = $kernel;
     }
 
-    //支付請求接口
+    //訂單支付請求接口
 	public function payAddress($params){
         $request = new HttpRequest();
 
