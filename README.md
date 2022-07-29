@@ -1,25 +1,25 @@
-欢迎使用 PWFPAY SDK for PHP 。
+歡迎使用 PWFPAY SDK for PHP 。
 
-## 环境要求
-1. PWFPAY SDK for PHP 需要 PHP 5.5 以上的开发环境。
+## 環境要求
+1. PWFPAY SDK for PHP 需要 PHP 5.5 以上的開發環境。
 
-2. 使用 PWFPAY SDK for  PHP 之前 ，您需要先前往[PWF开发平台](https://pwf.com/)注册并完成开发者接入的一些准备工作，包括创建应用、为应用设置接口加签方式等。
+2. 使用 PWFPAY SDK for  PHP 之前 ，您需要先前往https://pwf.com申請開通賬號並完成開發者接入的一些準備工作，包括創建應用、為應用設置接口相關配置等。
 
-3. 准备工作完成后，注意保存如下信息，后续将作为使用SDK的输入。
+3. 準備工作完成後，注意保存如下信息，後續將作為使用SDK的輸入。
 
-* 加签模式为公钥证书模式
+* 加簽模式為公私鑰證書模式
 
-`AppID`、`应用的私钥`、`PWF公钥`
+`AppID`、`應用的私鑰`、`PWF公鑰`
 
 
 ## 快速使用
 
-1. Composer 安装
+1. Composer 安裝
 ```
 composer require pwf/paysdk 
 ```
 
-2. 示例代码
+2. 示例代碼
 ```php
 <?php
 
@@ -34,7 +34,7 @@ ApiClient::setOptions(getOptions());
 
 try {
 
-     //支付請求接口
+     //订单支付請求接口
     $params = [
         "trade_name" => "trade_name",
         "fiat_currency" => "EUR",
@@ -58,24 +58,24 @@ try {
     print_r($result);
 
 } catch (Exception $e) {
-    echo "调用失败，". $e->getMessage(). PHP_EOL;;
+    echo "調用失敗，". $e->getMessage(). PHP_EOL;;
 }
 
 function getOptions()
 {
     $options = new Config();
 
-    $options->apiUrl = "<-- 请填写平台分配的接口域名，例如：https://xxx.pwf.com/ -->";
-    $options->appToken = "<-- 请填写您的appToken，例如：377b26eb8c25bd... -->";
-    $options->merchantNo = "<-- 请填写您的商户号，例如：202207...964 -->";
+    $options->apiUrl = "<-- 請填寫平台分配的接口域名，例如：https://xxx.pwf.com/ -->";
+    $options->appToken = "<-- 請填寫您的appToken，例如：377b26eb8c25bd... -->";
+    $options->merchantNo = "<-- 請填寫您的商戶號，例如：202207...964 -->";
 
-    //語系(參考文檔中最下方語系表，如:EN)
-    $options->lang = "CN";
+    //語系(參考文檔中最下方語系表，如:TC)
+    $options->lang = "TC";
     
-    $options->merchantPrivateCertPath = "<-- 请填写您的应用私钥路径，例如：/foo/MyPrivateKey.pem -->";
-    $options->pwfPublicCertPath = "<-- 请填写PWF平台公钥证书文件路径，例如：/foo/PwfPublicKey.pem -->";
+    $options->merchantPrivateCertPath = "<-- 請填寫您的應用私鑰路徑，例如：/foo/MyPrivateKey.pem -->";
+    $options->pwfPublicCertPath = "<-- 請填寫PWF平台公鑰證書文件路徑，例如：/foo/PwfPublicKey.pem -->";
 
-    $options->notifyUrl = "<-- 请填写您的异步通知接收服务地址，例如：https://www.notify.com/notify -->";
+    $options->notifyUrl = "<-- 請填寫您的異步通知接收服務地址，例如：https://www.notify.com/notify -->";
     return $options;
 }
 
