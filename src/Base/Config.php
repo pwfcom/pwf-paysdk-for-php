@@ -13,8 +13,6 @@ class Config{
 	
 	public $pwfPublicCertPath;
 	
-	public $notifyUrl;	
-	
 	public $lang;	
 	
 }

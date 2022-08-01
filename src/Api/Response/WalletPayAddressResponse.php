@@ -25,6 +25,16 @@ class WalletPayAddressResponse{
     public $fiat_amount;
     
     /**
+     * @var int
+     */
+    public $request_time;
+
+    /**
+     * @var int
+     */
+    public $expire_time;
+
+    /**
      * @var string
      */
     public $pay_url;
@@ -43,6 +53,12 @@ class WalletPayAddressResponse{
         }
         if(isset($map['fiat_amount'])){
             $model->fiat_amount = $map['fiat_amount'];
+        }
+        if(isset($map['request_time'])){
+            $model->request_time = $map['request_time'];
+        }
+        if(isset($map['expire_time'])){
+            $model->expire_time = $map['expire_time'];
         }
         if(isset($map['pay_url'])){
             $model->pay_url = $map['pay_url'];

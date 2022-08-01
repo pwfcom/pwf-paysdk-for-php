@@ -42,8 +42,8 @@ try {
         "out_trade_no" => "20200326235526001",
         "subject" => "eur_pay",
         "timestamp" => 1657895835,
-	"notify_url"=> "https://www.notify.com/notify",
-	"return_url" => "https://www.return.com/return",
+        "notify_url"=> "https://www.notify.com/notify",
+        "return_url" => "https://www.return.com/return",
         "collection_model" => 1,
         "merchant_no" => "2022072091622963",
     ];
@@ -75,7 +75,6 @@ function getOptions()
     $options->merchantPrivateCertPath = "<-- 請填寫您的應用私鑰路徑，例如：/foo/MyPrivateKey.pem -->";
     $options->pwfPublicCertPath = "<-- 請填寫PWF平台公鑰證書文件路徑，例如：/foo/PwfPublicKey.pem -->";
 
-    $options->notifyUrl = "<-- 請填寫您的異步通知接收服務地址，例如：https://www.notify.com/notify -->";
     return $options;
 }
 

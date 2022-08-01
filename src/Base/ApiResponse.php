@@ -35,5 +35,7 @@ class ApiResponse
         return isset($this->_json["data"]) ? $this->_json["data"] : null;
     }
 
-
+    public function lang(){
+        return isset($this->_json["lang"]) ? $this->_json["lang"] : null;
+    }
 }
