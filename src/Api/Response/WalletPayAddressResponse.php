@@ -22,7 +22,7 @@ class WalletPayAddressResponse{
     /**
      * @var float
      */
-    public $fiat_account;
+    public $fiat_amount;
     
     /**
      * @var string
@@ -41,8 +41,8 @@ class WalletPayAddressResponse{
         if(isset($map['fiat_currency'])){
             $model->fiat_currency = $map['fiat_currency'];
         }
-        if(isset($map['fiat_account'])){
-            $model->fiat_account = $map['fiat_account'];
+        if(isset($map['fiat_amount'])){
+            $model->fiat_amount = $map['fiat_amount'];
         }
         if(isset($map['pay_url'])){
             $model->pay_url = $map['pay_url'];
