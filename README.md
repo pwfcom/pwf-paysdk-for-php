@@ -82,7 +82,6 @@ function getOptions()
 
     $options->apiUrl = "<-- 請填寫平台分配的接口域名，例如：https://xxx.pwf.com/ -->";
     $options->appToken = "<-- 請填寫您的appToken，例如：377b26eb8c25bd... -->";
-    $options->merchantNo = "<-- 請填寫您的商戶號，例如：202207...964 -->";
 
     //語系(參考文檔中最下方語系表，如:TC)
     $options->lang = "TC";
