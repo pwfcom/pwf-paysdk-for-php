@@ -4,8 +4,10 @@ namespace Pwf\PaySDK\Base;
 use Pwf\PaySDK\Utils\RSAEncryptor;
 use GuzzleHttp\Psr7\Stream;
 use Psr\Http\Message\ResponseInterface;
+use Pwf\PaySDK\Http\HttpClient;
+use Pwf\PaySDK\Http\HttpRequest;
 
-class Kernel{
+class PwfClient{
 
 
     private $config;
@@ -19,7 +21,7 @@ class Kernel{
     const DEFAULT_CHARSET = "UTF-8";
     const SDK_VERSION = "V2.0";
 
-    public function __construct($config)
+    public function __construct(Config $config)
     {
         $this->config = $config;
 
@@ -79,27 +81,9 @@ class Kernel{
         return $this->RSAEncryptor->privDecrypt($data,$this->merchantPrivateKey);
     }
 
-    public function getResponseData($data,$returnClass){
-        $result = new ApiResponse($data);
-        if($result->isSuccess()){
-            $data = $this->decryptResponseData($result->data());
-            if($this->verify($data)){
-                return $returnClass::fromMap($data);
-            }
-            
-            throw new PwfError("驗簽失敗，請檢查Pwf平台公鑰或商戶私鑰是否配置正確。");
-            
-        }else if($result->ret()){
-            throw new PwfError($result->msg());
-        }else{
-            throw new PwfError("返回數據出錯");
-        }
-    }
-    
     public function decryptResponseData($data){
 
         $decrypt_data = $this->rsaDecrypt($data);
-        
         $data_arr = json_decode($decrypt_data,true);
         if(json_last_error() === JSON_ERROR_NONE){
             return $data_arr;
@@ -113,7 +97,7 @@ class Kernel{
         unset($params['sign']);
         ksort($params);
 	    
-	$stringToBeSigned = "";
+	    $stringToBeSigned = "";
         $i = 0;
         foreach ($params as $k => $v) {
             if (false === $this->checkEmpty($v) && "@" != substr($v, 0, 1)) {
@@ -140,6 +124,7 @@ class Kernel{
         }
         
         $content = $this->getSignContent($data_arr);
+
         $sign = $data_arr['sign'] ?? null;
         return $this->RSAEncryptor->verify($content, $sign, $this->pwfPublicKey);
     }
@@ -153,6 +138,35 @@ class Kernel{
         $requestUrl = substr($requestUrl, 0, -1);
         return $requestUrl;
 
+    }
+
+    public function execute($urlpath,$params,$method="POST",$headers=[]){
+
+        $request = new HttpRequest();
+
+        $method =  strtoupper($method);
+        if(in_array($method,['GET','POST'])){
+            $method = "POST";
+        }
+
+        if(empty($headers) || !isset($headers["content-type"])){
+            $headers["content-type"] = "application/json;charset=utf-8";
+        }
+        $request->api_uri = $this->getConfig("apiUrl");
+        $request->method = $method;
+        $request->pathname = $urlpath;
+        $request->headers = $headers;
+        $request->body = $this->buildPostParams($params);
+
+        $response = HttpClient::send($request);
+
+        return $this->getApiResponse($response->getBody());
+    }
+
+    public function getApiResponse($responsen_body){
+        $apiResponse = new ApiResponse($this);
+        $apiResponse->setRequestBody($responsen_body);
+        return $apiResponse;
     }
 
     function checkEmpty($value)

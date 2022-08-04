@@ -25,41 +25,56 @@ composer require pwf/paysdk
 
 require 'vendor/autoload.php';
 
-use Pwf\PaySDK\Base\ApiClient;
+use Pwf\PaySDK\Base\PwfClient;
 use Pwf\PaySDK\Base\Config;
     
     
 //加载配置文件
-ApiClient::setOptions(getOptions());
+$pwfClient = new PwfClient(getOptions());
 
-try {
 
-     //订单支付請求接口
-    $params = [
-        "trade_name" => "trade_name",
-        "fiat_currency" => "EUR",
-        "fiat_amount" => 0.01,
-        "out_trade_no" => "20200326235526001",
-        "subject" => "eur_pay",
-        "timestamp" => 1657895835,
-        "notify_url"=> "https://www.notify.com/notify",
-        "return_url" => "https://www.return.com/return",
-        "collection_model" => 1,
-        "merchant_no" => "2022072091622963",
-    ];
+ //订单支付請求接口
+$params = [
+    "trade_name" => "trade_name",
+    "fiat_currency" => "EUR",
+    "fiat_amount" => 0.01,
+    "out_trade_no" => "20200326235526001",
+    "subject" => "eur_pay",
+    "timestamp" => 1657895835,
+    "notify_url"=> "https://www.notify.com/notify",
+    "return_url" => "https://www.return.com/return",
+    "collection_model" => 1,
+    "merchant_no" => "2022072091622963",
+];
 
-    $result = ApiClient::wallet()->payAddress($params);
-    print_r($result);
+$result = $pwfClient->execute("/api/v2/wallet/payAddress",$params);
+if($result->isSuccess()){
+
+    if($result->verify()){
+
+        print_r($result->dataMap());
+    }else{
+        throw new \Exception("驗簽失敗，請檢查Pwf平台公鑰或商戶私鑰是否配置正確。");
+    }
     
-    
-    //异步回调通知
-    $json_string = '{"ret":1000,"msg":"\u8bf7\u6c42\u6210\u529f","data":"WDlwdnBoSkFDeS96bVdIYjg4WUNaaXVuV3NTQ......."}';
-    $result = ApiClient::notify()->pay($json_string);
-    print_r($result);
-
-} catch (Exception $e) {
-    echo "調用失敗，". $e->getMessage(). PHP_EOL;;
+}else{
+    throw new \Exception($result->ret() .":".$result->msg());
 }
+
+
+//异步回调通知
+$json_string = '{"ret":1000,"msg":"\u8bf7\u6c42\u6210\u529f","data":"WDlwdnBoSkFDeS96bVdIYjg4WUNaaXVuV3NTQ......."}';
+$result = $pwfClient->getApiResponse($json_string);
+if($result->isSuccess()){
+
+    if($result->verify()){
+
+        print_r($result->dataMap());
+    }else{
+        throw new \Exception("驗簽失敗，請檢查Pwf平台公鑰或商戶私鑰是否配置正確。");
+    }   
+}
+
 
 function getOptions()
 {

@@ -7,16 +7,41 @@ namespace Pwf\PaySDK\Base;
 class ApiResponse
 {
 
-    private $_json;
+    protected $_kernel;
 
-    public function __construct($data){
+    public const SUCCESS_CODE = 1000;
+
+    private $_json;
+    private $_dataMap = [];
+
+    public function __construct($kernel){
+        $this->_kernel = $kernel;
+    }
+
+    public function setRequestBody($data){
         
         $this->_json = json_decode($data,true);
+        if(json_last_error() !== JSON_ERROR_NONE){
+            throw new \Exception("Invalid response data");
+        }
     }
 
     public function isSuccess()
     {
-        if ($this->ret() == 1000) {
+
+        if ($this->ret() == self::SUCCESS_CODE) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function verify()
+    {
+        $decryptDataMap = $this->_kernel->decryptResponseData($this->data());
+        if ($decryptDataMap != null && $this->_kernel->verify($decryptDataMap))
+        {
+            $this->dataMap = $decryptDataMap;
             return true;
         }
 
@@ -37,5 +62,10 @@ class ApiResponse
 
     public function lang(){
         return isset($this->_json["lang"]) ? $this->_json["lang"] : null;
+    }
+
+    public function dataMap()
+    {
+        return $this->dataMap;
     }
 }
