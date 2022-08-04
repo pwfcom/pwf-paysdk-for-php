@@ -41,10 +41,10 @@ $params = [
     "out_trade_no" => "20200326235526001",
     "subject" => "eur_pay",
     "timestamp" => 1657895835,
-    "notify_url"=> "https://www.notify.com/notify",
+    "notify_url"=> "https://www.notify.com/notify", //此處的異步回調通知地址需與商戶中心配置的異步通知地址一致
     "return_url" => "https://www.return.com/return",
     "collection_model" => 1,
-    "merchant_no" => "2022072091622963",
+    "merchant_no" => "<-- 請填寫您的商戶號，例如：2022......81170 -->",
 ];
 
 $result = $pwfClient->execute("/api/v2/wallet/payAddress",$params);
