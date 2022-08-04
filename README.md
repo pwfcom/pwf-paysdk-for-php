@@ -62,7 +62,7 @@ if($result->isSuccess()){
 }
 
 
-//异步回调通知
+//异步回调通知處理示例
 $json_string = '{"ret":1000,"msg":"\u8bf7\u6c42\u6210\u529f","data":"WDlwdnBoSkFDeS96bVdIYjg4WUNaaXVuV3NTQ......."}';
 $result = $pwfClient->getApiResponse($json_string);
 if($result->isSuccess()){
