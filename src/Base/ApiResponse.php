@@ -38,7 +38,12 @@ class ApiResponse
 
     public function verify()
     {
-        $decryptDataMap = $this->_kernel->decryptResponseData($this->data());
+        $data = $this->data();
+        if(!$data){
+            return false;
+        }
+
+        $decryptDataMap = $this->_kernel->decryptResponseData($data);
         if ($decryptDataMap != null && $this->_kernel->verify($decryptDataMap))
         {
             $this->dataMap = $decryptDataMap;
