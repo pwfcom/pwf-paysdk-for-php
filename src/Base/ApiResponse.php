@@ -20,7 +20,7 @@ class ApiResponse
 
     public function setRequestBody($data){
         
-        $this->_json = json_decode($data,true);
+        $this->_json = json_decode($data,true,JSON_UNESCAPED_SLASHES);
         if(json_last_error() !== JSON_ERROR_NONE){
             throw new \Exception("Invalid response data");
         }

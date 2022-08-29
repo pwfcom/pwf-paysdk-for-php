@@ -84,7 +84,7 @@ class PwfClient{
     public function decryptResponseData($data){
 
         $decrypt_data = $this->rsaDecrypt($data);
-        $data_arr = json_decode($decrypt_data,true);
+        $data_arr = json_decode($decrypt_data,true,JSON_UNESCAPED_SLASHES);
         if(json_last_error() === JSON_ERROR_NONE){
             return $data_arr;
         }else{
